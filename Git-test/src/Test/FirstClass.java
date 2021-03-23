@@ -14,5 +14,8 @@ public class FirstClass {
 
         int i=0;
         i=100;
+
+
+        System.out.println("hhh");
     }
 }
