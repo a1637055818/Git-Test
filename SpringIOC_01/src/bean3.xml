@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--bean的作用域：指定bean是否单实例
+    默认单实例
+    prototype:多实例
+    容器启动默认不会去创建多实例bean
+    获取的时候创建这个bean
+    每次获取都会创建一个新的对象
+    singleton:单实例 默认值
+
+
+    request:在web环境下，同一次请求创建一个bean实例
+    session：web环境下，同一次会话创建一个bean实例
+    -->
+    <bean id="person01" class="com.peng.bean.Person" scope="singleton">
+        <property name="lastName" value="zhifei"></property>
+        <property name="email" value="zhifei@qq.com"></property>
+        <property name="age" value="18"></property>
+        <property name="gender" value="男"></property>
+    </bean>
+
+    <!--bean的创建默认就是框架利用反射new出来的bean-->
+    <!--工厂模式：工厂帮我们创建对象：
+    xxxFactory.getxxxx();
+    静态工厂：工厂本身不用创建对象；通过静态方法调用工厂类.方法名
+    实例工厂：工厂本身需要创建对象，new工厂类实例;
+    -->
+    <!--静态工厂（不需要创建工厂本身）
+    factory-method="getPerson":指定哪个方法是工厂方法
+    class：指定静态工厂全类名
+    -->
+    <bean id="factory01" class="com.peng.factory.StaticFactory"
+    factory-method="getPerson">
+        <!--可以为方法指定参数-->
+    <constructor-arg name="lastName" value="张三"></constructor-arg>
+    </bean>
+    <!--实例工厂使用
+    1.先配置出实例工厂对象
+    2.配置我们要穿点的Person对象使用哪个工厂创建
+    factory-bean指定使用哪个工厂实例
+    factory-method使用哪个工厂方法
+    -->
+    <bean id="factory02" class="com.peng.factory.InstanceFactory">
+    </bean>
+    <!--factory-bean指定：指定当前对象创建使用哪个工厂-->
+    <bean id="factoryPerson" class="com.peng.bean.Person"
+    factory-bean="factory02" factory-method="getPerson">
+    <constructor-arg name="lastName" value="李四"></constructor-arg>
+    </bean>
+
+    <!--FactoryBean(是Spring规定的接口),
+    只要是这个接口的实现类，Spring都认为是一个工厂
+    1.IOC容器启动的时候不会创建实例
+    2.FactoryBean获取的时候才创建对象-->
+    <bean id="myFactoryBean" class="com.peng.factory.MyFactoryBean">
+
+    </bean>
+</beans>

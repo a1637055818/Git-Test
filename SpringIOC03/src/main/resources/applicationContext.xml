@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:dbconfig.properties"></context:property-placeholder>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+        <property name="driverClass" value="${jdbc.driverClass}"></property>
+    </bean>
+
+    <!--通过注解创建Dao，Service、Controller
+    通过给bean上添加注解，可以快速的将bean加入到ioc容器中
+    某个类上添加上任何一个注解都能快速的将这个组件加入到ioc容器
+    @controller 控制器（给控制器层加这个）
+    @service    业务逻辑层，推荐给业务逻辑层的组件添加
+    @repository 给数据库层（持久化层，dao层）添加
+    @component  组件
+
+    注解可以随便加，Spring底层不会去验证这个组件是否为注解所说是什么组件
+    推荐给各自层各自加注解
+
+    使用注解快速的将组件加入到容器中需要
+    1.给要添加的组件上标识注解
+    2.告诉Spring自动扫描这些加了注解的组件
+    3.一定要导入AOP包，支持注解模式
+
+
+    -->
+    <!--context:component-scan Spring的自动组件扫描
+    base-package：扫描基础包，
+    把基础包及以下的所有包加了注解的类自动扫描加入IOC容器中
+    -->
+<!--    <context:component-scan base-package="com.peng">-->
+<!--&lt;!&ndash;        <context:exclude-filter type="annotation" expression=""/>&ndash;&gt;-->
+<!--    </context:component-scan>-->
+
+    <!--DI依赖注入
+    使用autowired注解实现根据类型自动装配
+    @Autowired原理:
+    @Autowired
+    private BookService bookService;
+    1.先按照类型去容器中找到对应的组件
+    bookService=ioc.getbean(BookService.class);
+        1.找到一个：找到就赋值
+        2.没找到：抛异常
+        3.找到多个？装配上？
+            1.按照变量名作为id继续匹配
+                1.匹配上？装配
+                2.没有匹配？报错
+                    原因：因为按照变量名作为id继续匹配
+                    使用@Qualifier("bookService")指定一个新id
+                        1.找到 装配
+                        2.找不到 报错
+
+    -->
+    <context:component-scan base-package="com.peng"></context:component-scan>
+
+
+
+</beans>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--扫描所有组件-->
+    <context:component-scan base-package="com.peng" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--配置一个视图解析器，帮我们拼接页面地址
+        可以导入JSTL包，fmt：message
+    -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"></property>
+        <property name="suffix" value=".jsp"></property>
+<!--        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>-->
+    </bean>
+
+    <!--发送一个请求(toLoginPage),直接来到WEB-INF下的login页面
+    mvc名称空间下有一个请求映射标签
+    path指定哪个请求
+    view-name指定映射给哪个视图
+    其他的请求就不好用了-->
+    <!--<mvc:view-controller path="/toLoginPage" view-name="login"/>-->
+    <!--开启MVC注解驱动模式
+    SpringMVC可以保证动态请求和静态请求都能访问-->
+    <mvc:annotation-driven/>
+    <!--默认前端控制器是拦截所有资源(除了jsp),所以js文件找不到
+    要js文件请求交给Tomcat处理-->
+    <!--告诉MVC，自己映射的请求就自己处理,不能处理的请求直接交给Tomcat-->
+    <!--静态资源能访问，动态映射的请求就不行-->
+    <mvc:default-servlet-handler/>
+
+    <!--可以合并配置文件-->
+<!--    <import resource="spring.xml"/>-->
+</beans>

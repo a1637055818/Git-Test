@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--1.和Spring的context：property-placeholder:
+    引用外部配置文件
+    resource:从类路径下开始引用
+    url:引用磁盘路径或网络路径
+    -->
+    <properties resource="dbconfig.properties"></properties>
+
+    <settings>
+        <!--开启驼峰命名法-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--开启延迟加载开关-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--开启属性的按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!--开启二级缓存,默认开启,防止版本更新变为false-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+    <!--插件是mybatis中的一个强大功能-->
+    <!--分页插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+    </plugins>
+    <!--environments配置环境们
+        environment:配置一个具体的环境,
+        都需要一个事务管理器和一个数据源
+        transactionManager:事务管理器
+    -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <!--配置连接池-->
+            <dataSource type="POOLED">
+                <!--${}取出配置文件中的值-->
+                <property name="driver" value="${driverclass}"/>
+                <property name="url" value="${jdbcurl}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--mybatis用来考虑数据库移植性的-->
+    <databaseIdProvider type="DB_VENDOR">
+        <!--name="":数据库产商标识 value=""给这个标识起别名-->
+        <property name="MySQL" value="mysql"/>
+    </databaseIdProvider>
+
+    <!--写好的sql映射文件需要使用mappers注册进来-->
+    <mappers>
+        <!--
+            resource:类路径下找sql映射文件
+            url:可以从磁盘或者网络路径引用
+            class:直接引用接口的全类名
+                可以将xml放在和dao接口同目录下，且文件名和接口名须一致
+
+        -->
+<!--        <mapper resource="com.peng.dao/EmployeeDao.xml"/>-->
+        <!--批量注册 name="",dao所在的包名-->
+        <package name="com.peng.dao"/>
+    </mappers>
+</configuration>

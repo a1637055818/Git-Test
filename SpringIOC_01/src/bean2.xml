@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="car01" class="com.peng.bean.Car">
+        <property name="carName" value="aaa"></property>
+        <property name="price" value="123"></property>
+        <property name="color" value="red"></property>
+    </bean>
+<!--正确的为各种属性赋值
+    ref:代表引用外面的一个值
+        car=ioc.getbean("car01");
+
+-->
+    <bean id="person01" class="com.peng.bean.Person">
+<!--        <property name="car" ref="car01"></property>-->
+        <!--对象可以使用bean标签创建-->
+        <property name="car">
+            <bean class="com.peng.bean.Car">
+                <property name="color" value="blue"></property>
+                <property name="price" value="231"></property>
+                <property name="carName" value="bluecar"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="book1" class="com.peng.bean.Book">
+        <property name="author" value="罗贯中"></property>
+        <property name="bookName" value="三国演义"></property>
+    </bean>
+
+    <bean id="person02" class="com.peng.bean.Person">
+        <!--如何为list类型赋值-->
+        <property name="books">
+<!--            books=new arraylist<book>();-->
+            <list>
+              <!--list标签体中添加每一个元素
+              引用内部bean：不能被获取到，只能内部使用
+              -->
+                <bean id="book001" class="com.peng.bean.Book">
+                    <property name="author" value="吴承恩"></property>
+                    <property name="bookName" value="西游记"></property>
+                </bean>
+                <ref bean="book1"/>
+            </list>
+        </property>
+        <!--private Map<String,Object> maps;-->
+        <property name="maps">
+            <!--maps=new LinkedHashMap<>();-->
+            <map>
+                <!--一个entry代表一个键值对-->
+                <entry key="key01" value="张三"></entry>
+                <entry key="key02" value="123"></entry>
+                <entry key="key03" value-ref="book1"></entry>
+                <entry key="key04">
+                    <bean class="com.peng.bean.Car">
+                        <property name="carName" value="redcar"></property>
+                        <property name="price" value="456"></property>
+                        <property name="color" value="red"></property>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>

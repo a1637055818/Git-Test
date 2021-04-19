@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+        <!--SpringMVC思想是有一个前端拦截器能拦截所有请求，并智能开发-->
+        <!--这个前端控制器是一个servlet，应该在web.xml中配置这个servlet来拦截所有请求-->
+        <servlet>
+            <servlet-name>dispatcherServlet</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <init-param>
+                <!--contextConfigLocation:指定SpringMVC配置文件位置-->
+                <param-name>contextConfigLocation</param-name>
+                <param-value>classpath:springmvc.xml</param-value>
+            </init-param>
+            <!--servlet启动加载，servlet原本是第一次访问创建对象-->
+            <!--load-on-startup:服务器启动的时候创建对象，
+            值越小优先级越高，越先创建对象-->
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>dispatcherServlet</servlet-name>
+            <!--/和/*都是拦截所有请求:
+            /也会拦截所有请求，但是不会拦截*.jsp
+            jsp访问正常
+            /*的范围更大：还会拦截到*.jsp这些请求
+            一旦拦截jsp页面就无法显示
+            *.jsp是tomcat做的处理，所有项目的小web.xml都是继承于大web.xml
+            DefaultServlet是tomcat中处理静态资源的？
+            除了jsp和servlet外剩下的都是静态资源
+            xxx.html：静态资源，tomcat就会在服务器下找这个资源并返回
+            我们前端控制器的/禁用了tomcat服务器中的DefaultServlet
+
+            1.服务器的web.xml种有一个DefaultServlet是url-pattern=/
+            2.我们配置的前端控制器url-pattern=/
+                静态资源会来到dispatcherServlet(前端控制器)
+                看哪个方法的@RequestMapping是这个xxx.html
+            3.为什么jsp能访问？因为我们没有覆盖服务器中的JspServlet的配置
+            4./* 直接就是拦截所有请求 我们写/也是为了迎合后来的Rest风格的URL地址
+            -->
+            <url-pattern>/</url-pattern>
+        </servlet-mapping>
+</web-app>

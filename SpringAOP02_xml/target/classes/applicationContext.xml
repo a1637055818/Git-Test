@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+<!--    <context:component-scan base-package="com.peng"></context:component-scan>-->
+
+    <!--基于注解的AOP步骤
+    1.将目标类和切面类都加入到IOC容器中 @Compoent
+    2.告诉Spring那个是切面类.@Aspect
+    3.在切面类中使用五个通知注解来配置
+    切面中的这些通知方法都何时何地运行
+    4.开启基于注解的AOP功能
+    -->
+    <!--开启基础注解的AOP功能-->
+<!--    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
+
+    <!--基于配置的AOP-->
+    <bean id="myMathCalculator" class="com.peng.impl.MyMathCalculator"></bean>
+    <bean id="validateApsect" class="com.peng.utils.ValidateApsect"></bean>
+    <bean id="logUtils" class="com.peng.utils.LogUtils"></bean>
+
+    <!--需要aop名称空间-->
+    <aop:config>
+        <!--指定切面 @Aspect-->
+        <aop:aspect ref="logUtils">
+            <!--配置哪个方法时前置通知
+            method="logStart"-》@Before("切入点表达式")
+            -->
+            <aop:pointcut id="mypoint" expression="execution(public * com.peng.impl.*.*(..))"/>
+            <aop:before method="logStart"  pointcut-ref="mypoint"></aop:before>
+            <aop:after-returning method="logReturn" pointcut-ref="mypoint" returning="res"></aop:after-returning>
+            <aop:after-throwing method="logException" pointcut-ref="mypoint" throwing="e"></aop:after-throwing>
+            <aop:after method="logEnd" pointcut-ref="mypoint"></aop:after>
+            <aop:around method="myAround" pointcut-ref="mypoint"></aop:around>
+        </aop:aspect>
+<!--        <aop:aspect ref="validateApsect"></aop:aspect>-->
+        <!--在切面类中使用五个通知注解来配置
+    切面中的这些通知方法都何时何地运行-->
+    </aop:config>
+</beans>
