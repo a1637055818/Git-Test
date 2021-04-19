@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peng.dao.TeacherDao">
+    <!--使用mybatis默认二级缓存-->
+<!--    <cache></cache>-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+
+    <!--public List<Teacher> getTeachers();-->
+    <select id="getTeachers" resultMap="TeacherMap">
+        <include refid="selectSQL"></include>
+    </select>
+
+
+    <!--public Teacher getTeacherById(Integer id);-->
+    <select id="getTeacherById" resultMap="TeacherMap">
+        <!--select * from t_teacher-->
+        <include refid="selectSQL"/>
+        where id=#{id}
+    </select>
+    <resultMap id="TeacherMap" type="com.peng.bean.Teacher">
+        <id property="id" column="id"/>
+        <result property="address" column="address"/>
+        <result property="birth" column="birth_date"/>
+        <result property="course" column="class_name"/>
+        <result property="name" column="teachername"/>
+    </resultMap>
+
+    <!--抽取可重用的sql语句-->
+    <sql id="selectSQL">select * from t_teacher</sql>
+
+</mapper>
